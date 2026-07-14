@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="theme-color" content="#0E0E0E" />
+<title>About — Sim Wear</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .about-grid { display: flex; gap: 3rem; padding: 0 3rem 5rem; align-items: center; }
+  .about-visual { flex: 1; aspect-ratio: 1; border-radius: 24px; background: linear-gradient(135deg,#1a0e2e,#2d1b4e); display: flex; align-items: center; justify-content: center; font-size: 6rem; }
+  .about-copy { flex: 1; }
+  .about-copy p { opacity: 0.65; line-height: 1.8; margin-bottom: 1.2rem; font-size: 0.95rem; }
+  .values-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; }
+  .value-card { background: var(--card-bg); border-radius: 18px; padding: 1.8rem; }
+  .value-card .v-emoji { font-size: 2rem; margin-bottom: 0.8rem; }
+  .value-card h4 { font-family: 'Unbounded', sans-serif; font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .value-card p { opacity: 0.55; font-size: 0.85rem; line-height: 1.6; }
+  @media (max-width: 900px) {
+    .about-grid { flex-direction: column; padding: 0 1.2rem 3rem; }
+    .values-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-logo-text">SIM<span class="accent">WEAR</span></span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="shop.html">New In</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="openCart()">🛍️ Bag <span class="cart-count" id="cartCount">0</span></button>
+    <a href="shop.html" class="nav-cta">Shop Now →</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html">Shop</a><a href="shop.html">New In</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  <div class="mobile-menu-footer">Sim Wear · Dress Different</div>
+</div>
+
+<div class="bottom-nav">
+  <a href="index.html" class="bottom-nav-item"><span class="bn-icon">🏠</span>Home</a>
+  <a href="shop.html" class="bottom-nav-item"><span class="bn-icon">🛍️</span>Shop</a>
+  <a href="contact.html" class="bottom-nav-item"><span class="bn-icon">💬</span>Contact</a>
+  <button class="bottom-nav-item" onclick="openCart()" style="border:none;background:none;">
+    <span class="bottom-cart-badge"><span class="bn-icon">🛒</span><span class="badge-dot" id="bottomCartBadge">0</span></span>Bag
+  </button>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>Your Bag 🛍️</h2>
+    <div class="cart-header-right"><span class="cart-item-total" id="drawerItemCount">0 items</span><button class="close-btn" onclick="closeCart()">✕</button></div>
+  </div>
+  <div class="cart-items" id="cartItemsContainer"></div>
+  <div class="cart-footer">
+    <div class="cart-subtotal"><span>Subtotal</span><span class="total-amount" id="cartTotal">R 0</span></div>
+    <p class="cart-shipping-note">🚚 Free delivery on orders over R600</p>
+    <a href="checkout.html" class="checkout-btn" id="checkoutBtn">Proceed to Checkout →</a>
+    <button class="continue-btn" onclick="closeCart()">← Continue Shopping</button>
+  </div>
+</div>
+
+<main>
+  <div class="page-hero">
+    <div class="section-label">Our Story</div>
+    <h1>Built From Jozini, Worn Everywhere.</h1>
+    <p>Sim Wear started with a simple idea: South African streetwear deserves a home online that actually gets the culture right.</p>
+  </div>
+
+  <div class="about-grid">
+    <div class="about-visual">🇿🇦</div>
+    <div class="about-copy">
+      <p>Sim Wear was founded by <strong>Sizwe Sibiya</strong>, a software developer student at WeThinkCode_ in Durban, who set out to build more than just an app — a real brand for the culture. What started as a class project turned into a genuine e-commerce venture bringing bold, homegrown fashion to people across South Africa.</p>
+      <p>Every piece in the catalog — from oversized tees to full outfit sets — is chosen to reflect a Sim Wear philosophy: dress different, not basic. We're building this brand the same way we build our code: intentionally, one solid piece at a time.</p>
+      <p>Today Sim Wear ships nationwide from Durban, with new drops added regularly and a growing community backing the vision.</p>
+      <a href="shop.html" class="btn-primary" style="margin-top:1rem;">Shop The Collection →</a>
+    </div>
+  </div>
+
+  <section style="padding-top:0;">
+    <div class="section-label">What We Stand For</div>
+    <h2 class="section-title">Our Values</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="v-emoji">🇿🇦</div>
+        <h4>Proudly Local</h4>
+        <p>South African fashion, made for South Africans first — then the world.</p>
+      </div>
+      <div class="value-card">
+        <div class="v-emoji">🎨</div>
+        <h4>Bold By Design</h4>
+        <p>No basics here. Every piece is picked to stand out, not blend in.</p>
+      </div>
+      <div class="value-card">
+        <div class="v-emoji">🤝</div>
+        <h4>Built On Trust</h4>
+        <p>Fast delivery, real support, and a founder who actually answers your DMs.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="nav-logo-text">SIM<span class="accent">WEAR</span></span>
+      <p>South African streetwear built different. Founded by Sizwe Sibiya, based in Durban, shipped nationwide.</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col"><h4>Shop</h4><ul>
+        <li><a href="shop.html?cat=tees">Tees & Hoodies</a></li>
+        <li><a href="shop.html?cat=sneakers">Sneakers</a></li>
+        <li><a href="shop.html?cat=accessories">Accessories</a></li>
+        <li><a href="shop.html?cat=outfits">Full Outfit Sets</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Help</h4><ul>
+        <li><a href="sizeguide.html">Size Guide</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="cart.html">Your Bag</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Company</h4><ul>
+        <li><a href="about.html">About Sim Wear</a></li>
+        <li><a href="contact.html">Get In Touch</a></li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Sim Wear. Built by Sizwe Sibiya.</span>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/mudes2026" target="_blank" title="Instagram">📸</a>
+      <a href="https://www.tiktok.com/@sizwesibiya7" target="_blank" title="TikTok">🎵</a>
+      <a href="https://www.facebook.com/sizwe.sbiya.5439" target="_blank" title="Facebook">👥</a>
+      <a href="https://wa.me/qr/FZLHEACFAODGC1" target="_blank" title="WhatsApp">💬</a>
+    </div>
+  </div>
+</footer>
+
+<script src="shop.js"></script>
+</body>
+</html>
+
