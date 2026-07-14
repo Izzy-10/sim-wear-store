@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="theme-color" content="#0E0E0E" />
+<title>Your Bag — Sim Wear</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .cart-page-layout { display: flex; gap: 2.5rem; padding: 2.5rem 3rem 5rem; align-items: flex-start; }
+  .cart-list { flex: 2; display: flex; flex-direction: column; gap: 0.9rem; }
+  .cart-page-item { display: flex; gap: 1rem; align-items: center; background: var(--card-bg); border-radius: 16px; padding: 1.1rem; }
+  .cart-page-img { width: 76px; height: 76px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; flex-shrink: 0; position: relative; overflow: hidden; }
+  .cart-page-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+  .product-img-fallback { position: relative; z-index: 0; }
+  .cart-page-body { flex: 1; min-width: 0; }
+  .cart-page-name { font-family: 'Unbounded', sans-serif; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .cart-page-type { font-size: 0.75rem; opacity: 0.4; margin-bottom: 0.8rem; }
+  .summary-panel { flex: 1; max-width: 360px; background: var(--card-bg); border-radius: 18px; padding: 1.8rem; position: sticky; top: calc(var(--nav-h) + 1.5rem); }
+  .summary-panel h3 { font-family: 'Unbounded', sans-serif; font-size: 0.95rem; margin-bottom: 1.2rem; }
+  .summary-line { display: flex; justify-content: space-between; font-size: 0.85rem; opacity: 0.6; margin-bottom: 0.7rem; }
+  .summary-line.total { opacity: 1; font-family: 'Unbounded', sans-serif; font-weight: 900; font-size: 1.1rem; color: var(--lime); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.9rem; margin-top: 0.5rem; }
+  @media (max-width: 900px) {
+    .cart-page-layout { flex-direction: column; padding: 2rem 1.2rem 3rem; }
+    .summary-panel { max-width: 100%; position: static; width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-logo-text">SIM<span class="accent">WEAR</span></span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="shop.html">New In</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="openCart()">🛍️ Bag <span class="cart-count" id="cartCount">0</span></button>
+    <a href="shop.html" class="nav-cta">Keep Shopping →</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html">Shop</a>
+  <a href="shop.html">New In</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="mobile-menu-footer">Sim Wear · Dress Different</div>
+</div>
+
+<div class="bottom-nav">
+  <a href="index.html" class="bottom-nav-item"><span class="bn-icon">🏠</span>Home</a>
+  <a href="shop.html" class="bottom-nav-item"><span class="bn-icon">🛍️</span>Shop</a>
+  <a href="contact.html" class="bottom-nav-item"><span class="bn-icon">💬</span>Contact</a>
+  <button class="bottom-nav-item active" onclick="openCart()" style="border:none;background:none;">
+    <span class="bottom-cart-badge"><span class="bn-icon">🛒</span><span class="badge-dot" id="bottomCartBadge">0</span></span>Bag
+  </button>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>Your Bag 🛍️</h2>
+    <div class="cart-header-right">
+      <span class="cart-item-total" id="drawerItemCount">0 items</span>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+  </div>
+  <div class="cart-items" id="cartItemsContainer"></div>
+  <div class="cart-footer">
+    <div class="cart-subtotal"><span>Subtotal</span><span class="total-amount" id="cartTotal">R 0</span></div>
+    <p class="cart-shipping-note">🚚 Free delivery on orders over R600</p>
+    <a href="checkout.html" class="checkout-btn" id="checkoutBtn">Proceed to Checkout →</a>
+    <button class="continue-btn" onclick="closeCart()">← Continue Shopping</button>
+  </div>
+</div>
+
+<main>
+  <div class="page-hero" style="padding-bottom:0;">
+    <div class="section-label">Step 1</div>
+    <h1>Your Bag</h1>
+  </div>
+
+  <div class="cart-page-layout" id="cartPageLayout"><!-- injected --></div>
+</main>
+
+<footer>
+  <div class="footer-bottom" style="border-top:none;">
+    <span>© 2026 Sim Wear. Built by Sizwe Sibiya.</span>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/mudes2026" target="_blank" title="Instagram">📸</a>
+      <a href="https://www.tiktok.com/@sizwesibiya7" target="_blank" title="TikTok">🎵</a>
+      <a href="https://wa.me/qr/FZLHEACFAODGC1" target="_blank" title="WhatsApp">💬</a>
+    </div>
+  </div>
+</footer>
+
+<script src="shop.js"></script>
+<script>
+  function renderCartPage() {
+    const layout = document.getElementById('cartPageLayout');
+    if (!layout) return;
+
+    if (cart.length === 0) {
+      layout.innerHTML = `
+        <div class="empty-state" style="flex:1;">
+          <div class="icon">🛒</div>
+          <h3>Your bag is empty</h3>
+          <p>Add some fire fits and come back!</p>
+          <a href="shop.html" class="btn-primary">Start Shopping</a>
+        </div>`;
+      return;
+    }
+
+    const subtotal = cartSubtotal();
+    const freeDelivery = subtotal >= 600;
+
+    layout.innerHTML = `
+      <div class="cart-list">
+        ${cart.map(item => `
+          <div class="cart-page-item">
+            <div class="cart-page-img ${item.bg}">
+              <span class="product-img-fallback">${item.emoji}</span>
+              ${item.img ? `<img src="${item.img}" alt="${item.name}" onerror="this.remove()" />` : ''}
+            </div>
+            <div class="cart-page-body">
+              <div class="cart-page-name">${item.name}</div>
+              <div class="cart-page-type">${item.type}</div>
+              <div class="cart-item-controls">
+                <button class="qty-btn" onclick="changeQty('${item.key}',-1)">−</button>
+                <span class="qty-num">${item.qty}</span>
+                <button class="qty-btn" onclick="changeQty('${item.key}',1)">+</button>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.6rem;">
+              <button class="remove-btn" onclick="removeItem('${item.key}')">✕</button>
+              <div class="cart-item-price">${zar(item.price * item.qty)}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="summary-panel">
+        <h3>Order Summary</h3>
+        <div class="summary-line"><span>Subtotal</span><span>${zar(subtotal)}</span></div>
+        <div class="summary-line"><span>Delivery</span><span style="color:${freeDelivery?'var(--lime)':'inherit'}">${freeDelivery ? 'FREE' : 'From R60'}</span></div>
+        <div class="summary-line total"><span>Total</span><span>${zar(subtotal)}</span></div>
+        ${freeDelivery ? `<p style="font-size:0.75rem;color:var(--lime);margin-top:0.8rem;">🎉 You qualify for free delivery!</p>` : `<p style="font-size:0.75rem;opacity:0.4;margin-top:0.8rem;">Spend ${zar(600-subtotal)} more for free delivery</p>`}
+        <a href="checkout.html" class="btn-primary" style="width:100%;text-align:center;margin-top:1.5rem;">Proceed to Checkout →</a>
+        <a href="shop.html" class="continue-btn" style="text-align:center;">← Continue Shopping</a>
+      </div>
+    `;
+  }
+
+  renderCartPage();
+</script>
+</body>
+</html>
+
