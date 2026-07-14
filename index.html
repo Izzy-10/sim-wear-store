@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="theme-color" content="#0E0E0E" />
+<title>Sim Wear — Dress Different</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: calc(var(--nav-h) + 3rem) 3rem 5rem; position: relative; overflow: hidden; }
+  .hero-bg-shape { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.22; animation: float 8s ease-in-out infinite; }
+  .s1 { width:600px; height:600px; background:var(--coral); top:-200px; right:-150px; }
+  .s2 { width:400px; height:400px; background:var(--sky); bottom:-100px; left:-100px; animation-delay:3s; }
+  .s3 { width:300px; height:300px; background:var(--pink); top:40%; left:40%; animation-delay:5s; }
+  @keyframes float { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-28px) scale(1.04);} }
+  .hero-eyebrow { font-size:0.72rem; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--coral); margin-bottom:1rem; }
+  .hero-title { font-family:'Unbounded',sans-serif; font-size:clamp(3rem,10vw,8rem); font-weight:900; line-height:0.93; letter-spacing:-2px; max-width:900px; }
+  .hero-title .accent { color:var(--lime); display:block; }
+  .hero-title .accent2 { color:var(--coral); }
+  .hero-sub { margin-top:1.5rem; font-size:clamp(0.95rem,2.5vw,1.1rem); opacity:0.58; max-width:480px; line-height:1.7; }
+  .hero-actions { display:flex; gap:0.8rem; margin-top:2.4rem; flex-wrap:wrap; }
+  .hero-scroll { position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:0.4rem; opacity:0.3; font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; }
+  .hero-scroll::after { content:''; width:1px; height:36px; background:var(--off-white); }
+  @media (max-width: 768px) { .hero { padding: calc(var(--nav-h) + 2rem) 1.2rem 4rem; min-height: 100svh; } .hero-scroll { display: none; } }
+
+  .promo-banner { display:flex; align-items:center; justify-content:space-between; gap:2rem; background:linear-gradient(135deg,#1a0e2e,#2d1b4e); border-radius:24px; padding:3rem 3.5rem; margin:0 3rem; }
+  .promo-emoji { font-size:4.5rem; }
+  .promo-text h3 { font-family:'Unbounded',sans-serif; font-size:1.6rem; font-weight:900; margin-bottom:0.5rem; }
+  .promo-text p { opacity:0.6; }
+  @media (max-width: 768px) { .promo-banner { margin: 0 1.2rem; padding: 2rem 1.5rem; flex-direction: column; gap: 1.2rem; text-align: center; } .promo-emoji { font-size: 3.5rem; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-logo-text">SIM<span class="accent">WEAR</span></span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="shop.html">New In</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="openCart()">🛍️ Bag <span class="cart-count" id="cartCount">0</span></button>
+    <a href="shop.html" class="nav-cta">Shop Now →</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html">Shop</a>
+  <a href="shop.html">New In</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="mobile-menu-footer">Sim Wear · Dress Different</div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <a href="index.html" class="bottom-nav-item active"><span class="bn-icon">🏠</span>Home</a>
+  <a href="shop.html" class="bottom-nav-item"><span class="bn-icon">🛍️</span>Shop</a>
+  <a href="contact.html" class="bottom-nav-item"><span class="bn-icon">💬</span>Contact</a>
+  <button class="bottom-nav-item" onclick="openCart()" style="border:none;background:none;">
+    <span class="bottom-cart-badge"><span class="bn-icon">🛒</span><span class="badge-dot" id="bottomCartBadge">0</span></span>Bag
+  </button>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>Your Bag 🛍️</h2>
+    <div class="cart-header-right">
+      <span class="cart-item-total" id="drawerItemCount">0 items</span>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+  </div>
+  <div class="cart-items" id="cartItemsContainer"></div>
+  <div class="cart-footer">
+    <div class="cart-subtotal"><span>Subtotal</span><span class="total-amount" id="cartTotal">R 0</span></div>
+    <p class="cart-shipping-note">🚚 Free delivery on orders over R600</p>
+    <a href="checkout.html" class="checkout-btn" id="checkoutBtn">Proceed to Checkout →</a>
+    <button class="continue-btn" onclick="closeCart()">← Continue Shopping</button>
+  </div>
+</div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-shape s1"></div>
+    <div class="hero-bg-shape s2"></div>
+    <div class="hero-bg-shape s3"></div>
+    <div class="hero-eyebrow">South African Fashion · Online</div>
+    <h1 class="hero-title">Dress<span class="accent">Different</span><span class="accent2">Not Basic.</span></h1>
+    <p class="hero-sub">Sim Wear brings bold, homegrown streetwear to your doorstep. Tees, sneakers, accessories and full fits — built for the culture.</p>
+    <div class="hero-actions">
+      <a href="shop.html" class="btn-primary">Shop The Drop</a>
+      <a href="#categories" class="btn-outline">Explore Categories</a>
+    </div>
+    <div class="hero-scroll">Scroll</div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>FREE DELIVERY OVER R600</span><span class="marquee-dot">●</span>
+      <span>NEW DROPS WEEKLY</span><span class="marquee-dot">●</span>
+      <span>PROUDLY SOUTH AFRICAN</span><span class="marquee-dot">●</span>
+      <span>FREE DELIVERY OVER R600</span><span class="marquee-dot">●</span>
+      <span>NEW DROPS WEEKLY</span><span class="marquee-dot">●</span>
+      <span>PROUDLY SOUTH AFRICAN</span><span class="marquee-dot">●</span>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section id="categories">
+    <div class="section-label">Shop By</div>
+    <h2 class="section-title">Categories</h2>
+    <div class="categories-grid" id="categoriesGrid"></div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section id="featured">
+    <div class="section-label">Fresh Fits</div>
+    <h2 class="section-title">Featured Products</h2>
+    <div class="products-grid" id="featuredGrid"></div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="shop.html" class="btn-outline">View All Products →</a>
+    </div>
+  </section>
+
+  <!-- PROMO BANNER -->
+  <div class="promo-banner">
+    <div class="promo-emoji">🔥</div>
+    <div class="promo-text">
+      <h3>Full Outfit Sets — Up To 25% Off</h3>
+      <p>Matching sets designed to turn heads. Limited stock, dress different this week.</p>
+    </div>
+    <a href="shop.html?cat=outfits" class="btn-primary">Shop Sale</a>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <section>
+    <div class="section-label">Real Talk</div>
+    <h2 class="section-title">What Customers Say</h2>
+    <div class="testimonials-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The oversized tee fits perfectly and the quality is way better than I expected for the price. Definitely ordering again."</p>
+        <div class="testi-author"><div class="testi-avatar p1-bg">👤</div><div><div class="testi-name">Nomvula K.</div><div class="testi-loc">Durban, KZN</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Ordered the outfit set for a shoot and it did not disappoint. Fast delivery too — got it in 3 days."</p>
+        <div class="testi-author"><div class="testi-avatar p4-bg">👤</div><div><div class="testi-name">Thabo M.</div><div class="testi-loc">Johannesburg</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Finally a local brand that actually gets streetwear right. The cap is my new everyday piece."</p>
+        <div class="testi-author"><div class="testi-avatar p3-bg">👤</div><div><div class="testi-name">Lerato S.</div><div class="testi-loc">Cape Town</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section>
+    <div class="newsletter">
+      <div class="section-label" style="text-align:center;">Stay Fresh</div>
+      <h2 class="section-title" style="margin-bottom:0;">Get Early Access To New Drops</h2>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); this.reset(); alert('You\'re on the list! 🎉');">
+        <input class="form-input" type="email" placeholder="you@email.com" required />
+        <button class="btn-primary" type="submit">Subscribe</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="nav-logo-text">SIM<span class="accent">WEAR</span></span>
+      <p>South African streetwear built different. Founded by Sizwe Sibiya, based in Durban, shipped nationwide.</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col"><h4>Shop</h4><ul>
+        <li><a href="shop.html?cat=tees">Tees & Hoodies</a></li>
+        <li><a href="shop.html?cat=sneakers">Sneakers</a></li>
+        <li><a href="shop.html?cat=accessories">Accessories</a></li>
+        <li><a href="shop.html?cat=outfits">Full Outfit Sets</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Help</h4><ul>
+        <li><a href="sizeguide.html">Size Guide</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="cart.html">Your Bag</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Company</h4><ul>
+        <li><a href="about.html">About Sim Wear</a></li>
+        <li><a href="contact.html">Get In Touch</a></li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Sim Wear. Built by Sizwe Sibiya.</span>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/mudes2026" target="_blank" title="Instagram">📸</a>
+      <a href="https://www.tiktok.com/@sizwesibiya7" target="_blank" title="TikTok">🎵</a>
+      <a href="https://www.facebook.com/sizwe.sbiya.5439" target="_blank" title="Facebook">👥</a>
+      <a href="https://wa.me/qr/FZLHEACFAODGC1" target="_blank" title="WhatsApp">💬</a>
+    </div>
+  </div>
+</footer>
+
+<script src="shop.js"></script>
+<script>
+  document.getElementById('categoriesGrid').innerHTML = CATEGORIES.map(c => `
+    <a href="shop.html?cat=${c.key}" class="cat-card ${c.css}" style="background-image:url('${c.img}');">
+      <span class="cat-emoji">${c.emoji}</span>
+      <span class="cat-name">${c.name}</span>
+      <span class="cat-count">${categoryCount(c.key)} items</span>
+    </a>
+  `).join('');
+
+  renderProductCards(document.getElementById('featuredGrid'), PRODUCTS.slice(0, 6));
+</script>
+</body>
+</html>
