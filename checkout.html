@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="theme-color" content="#0E0E0E" />
+<title>Checkout — Sim Wear</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .co-steps-bar { display: flex; align-items: center; gap: 0.6rem; padding: calc(var(--nav-h) + 2rem) 3rem 1rem; }
+  .co-step { display: flex; align-items: center; gap: 0.5rem; font-family: 'Unbounded', sans-serif; font-size: 0.72rem; font-weight: 700; opacity: 0.35; }
+  .co-step.active, .co-step.done { opacity: 1; }
+  .co-step-num { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+  .co-step.active .co-step-num, .co-step.done .co-step-num { background: var(--lime); color: var(--dark); }
+  .co-step-sep { opacity: 0.2; }
+  .co-layout { display: flex; gap: 2.5rem; padding: 0 3rem 5rem; align-items: flex-start; }
+  .co-left { flex: 2; }
+  .co-panel { display: none; flex-direction: column; gap: 0.3rem; }
+  .co-panel.active { display: flex; }
+  .co-section-title { font-family: 'Unbounded', sans-serif; font-size: 0.85rem; font-weight: 700; margin: 1.2rem 0 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; }
+  .co-section-title:first-child { margin-top: 0; }
+  .delivery-opt, .pay-method { display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 1rem 1.2rem; cursor: pointer; margin-bottom: 0.7rem; transition: border-color 0.2s; }
+  .delivery-opt.selected, .pay-method.selected { border-color: var(--lime); background: rgba(212,255,0,0.05); }
+  .delivery-opt-icon, .pay-method-icon { font-size: 1.4rem; }
+  .delivery-opt-name, .pay-method-name { font-family: 'Unbounded', sans-serif; font-size: 0.8rem; font-weight: 700; }
+  .delivery-opt-desc, .pay-method-desc { font-size: 0.72rem; opacity: 0.4; margin-top: 0.2rem; }
+  .delivery-opt-fee { margin-left: auto; font-family: 'Unbounded', sans-serif; font-size: 0.8rem; color: var(--lime); }
+  .card-fields { display: none; flex-direction: column; gap: 0; margin-top: 1rem; }
+  .co-right { flex: 1; max-width: 340px; position: sticky; top: calc(var(--nav-h) + 1rem); }
+  .co-nav-bar { display: flex; gap: 1rem; margin-top: 1.5rem; }
+  .co-back-btn, .co-next-btn { flex: 1; font-family: 'Unbounded', sans-serif; font-size: 0.8rem; font-weight: 700; padding: 0.9rem; border-radius: 100px; border: none; cursor: pointer; }
+  .co-back-btn { background: rgba(255,255,255,0.06); color: var(--off-white); }
+  .co-next-btn { background: var(--lime); color: var(--dark); }
+  .review-card { background: rgba(255,255,255,0.04); border-radius: 14px; padding: 1.2rem; margin-bottom: 1rem; font-size: 0.84rem; line-height: 1.8; }
+  .review-edit { font-size: 0.7rem; color: var(--sky); cursor: pointer; font-family: 'Unbounded', sans-serif; font-weight: 700; float: right; }
+  .co-confirm { display: none; text-align: center; padding: 3rem 1rem; }
+  .co-confirm.active { display: block; }
+  .confirm-icon { font-size: 4rem; margin-bottom: 1rem; }
+  .confirm-title { font-family: 'Unbounded', sans-serif; font-size: 1.8rem; font-weight: 900; margin-bottom: 0.8rem; }
+  .confirm-title span { color: var(--lime); }
+  .confirm-order-num { font-family: 'Unbounded', sans-serif; font-size: 1rem; opacity: 0.5; margin-bottom: 1rem; }
+  .confirm-sub { opacity: 0.6; max-width: 420px; margin: 0 auto 2rem; line-height: 1.7; }
+  .confirm-steps { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .confirm-step { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; font-size: 0.7rem; opacity: 0.6; }
+  .confirm-step-icon { font-size: 1.5rem; }
+  @media (max-width: 900px) {
+    .co-steps-bar, .co-layout { padding-left: 1.2rem; padding-right: 1.2rem; }
+    .co-layout { flex-direction: column; }
+    .co-right { max-width: 100%; width: 100%; position: static; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-logo-text">SIM<span class="accent">WEAR</span></span></a>
+  <ul class="nav-links"><li><a href="shop.html">Shop</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li></ul>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-cta">← Back to Bag</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="cart.html">Bag</a><a href="shop.html">Shop</a><a href="contact.html">Contact</a>
+</div>
+<div class="bottom-nav">
+  <a href="index.html" class="bottom-nav-item"><span class="bn-icon">🏠</span>Home</a>
+  <a href="cart.html" class="bottom-nav-item active"><span class="bn-icon">🛍️</span>Bag</a>
+  <a href="contact.html" class="bottom-nav-item"><span class="bn-icon">💬</span>Contact</a>
+</div>
+
+<main>
+  <div class="co-steps-bar">
+    <div class="co-step active" id="step-tab-1"><span class="co-step-num">1</span>Delivery</div>
+    <span class="co-step-sep">›</span>
+    <div class="co-step" id="step-tab-2"><span class="co-step-num">2</span>Payment</div>
+    <span class="co-step-sep">›</span>
+    <div class="co-step" id="step-tab-3"><span class="co-step-num">3</span>Review</div>
+  </div>
+
+  <div id="checkoutBody">
+  <div class="co-layout">
+    <div class="co-left">
+
+      <!-- STEP 1 -->
+      <div class="co-panel active" id="co-panel-1">
+        <div class="co-section-title">Contact Info</div>
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input class="form-input" id="f-fname" placeholder="Sizwe" /></div>
+          <div class="form-group"><label>Last Name</label><input class="form-input" id="f-lname" placeholder="Sibiya" /></div>
+        </div>
+        <div class="form-group"><label>Email Address</label><input class="form-input" id="f-email" type="email" placeholder="you@email.com" /></div>
+        <div class="form-group"><label>Phone Number</label><input class="form-input" id="f-phone" type="tel" placeholder="+27 000 000 0000" /></div>
+
+        <div class="co-section-title">Delivery Address</div>
+        <div class="form-group"><label>Street Address</label><input class="form-input" id="f-street" placeholder="123 Dress Different Street" /></div>
+        <div class="form-row">
+          <div class="form-group"><label>City</label><input class="form-input" id="f-city" placeholder="Durban" /></div>
+          <div class="form-group"><label>Province</label>
+            <select class="form-input" id="f-province" style="cursor:pointer;">
+              <option value="">Select province</option>
+              <option>KwaZulu-Natal</option><option>Gauteng</option><option>Western Cape</option>
+              <option>Eastern Cape</option><option>Free State</option><option>Limpopo</option>
+              <option>Mpumalanga</option><option>North West</option><option>Northern Cape</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Postal Code</label><input class="form-input" id="f-postal" placeholder="4000" /></div>
+
+        <div class="co-section-title">Delivery Method</div>
+        <div class="delivery-opt selected" onclick="selectDelivery(this,60)">
+          <span class="delivery-opt-icon">📦</span>
+          <div><div class="delivery-opt-name">Standard Delivery</div><div class="delivery-opt-desc">2–5 working days</div></div>
+          <span class="delivery-opt-fee">R 60</span>
+        </div>
+        <div class="delivery-opt" onclick="selectDelivery(this,120)">
+          <span class="delivery-opt-icon">🚀</span>
+          <div><div class="delivery-opt-name">Express Delivery</div><div class="delivery-opt-desc">1–2 working days</div></div>
+          <span class="delivery-opt-fee">R 120</span>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="co-panel" id="co-panel-2">
+        <div class="co-section-title">Payment Method</div>
+        <div class="pay-method selected" onclick="selectPayMethod(this,'card')">
+          <span class="pay-method-icon">💳</span><div><div class="pay-method-name">Credit / Debit Card</div><div class="pay-method-desc">Visa, Mastercard</div></div>
+        </div>
+        <div class="pay-method" onclick="selectPayMethod(this,'eft')">
+          <span class="pay-method-icon">🏦</span><div><div class="pay-method-name">EFT Bank Transfer</div><div class="pay-method-desc">Manual bank transfer</div></div>
+        </div>
+        <div class="pay-method" onclick="selectPayMethod(this,'ozow')">
+          <span class="pay-method-icon">📱</span><div><div class="pay-method-name">Ozow Instant EFT</div><div class="pay-method-desc">Pay directly from your bank app</div></div>
+        </div>
+        <div class="pay-method" onclick="selectPayMethod(this,'payflex')">
+          <span class="pay-method-icon">🔄</span><div><div class="pay-method-name">PayFlex — 4 Payments</div><div class="pay-method-desc">Interest-free installments</div></div>
+        </div>
+
+        <div class="card-fields" id="card-fields" style="display:flex;">
+          <div class="form-group"><label>Name on Card</label><input class="form-input" id="f-card-name" placeholder="Sizwe Sibiya" /></div>
+          <div class="form-group"><label>Card Number</label><input class="form-input" id="f-card-num" placeholder="0000 0000 0000 0000" oninput="formatCard(this)" /></div>
+          <div class="form-row">
+            <div class="form-group"><label>Expiry</label><input class="form-input" id="f-expiry" placeholder="MM / YY" oninput="formatExpiry(this)" /></div>
+            <div class="form-group"><label>CVV</label><input class="form-input" id="f-cvv" placeholder="123" maxlength="3" /></div>
+          </div>
+        </div>
+        <div class="card-fields" id="eft-fields">
+          <div style="background:rgba(77,223,255,0.06);border:1px solid rgba(77,223,255,0.15);border-radius:14px;padding:1.2rem;">
+            <p style="font-size:0.8rem;opacity:0.7;margin-bottom:0.6rem;">Transfer to: <strong>Sim Wear (Pty) Ltd</strong> · FNB · Acc 6209 XXXX XXX</p>
+            <p style="font-size:0.8rem;opacity:0.7;">Reference: <strong id="eft-ref">SW-00000</strong></p>
+          </div>
+          <p style="font-size:0.75rem;opacity:0.4;margin-top:0.8rem;">Please use your order reference as the payment reference. Your order will be processed once payment is confirmed (1–2 business days).</p>
+        </div>
+        <div class="card-fields" id="instant-fields">
+          <div style="background:rgba(77,223,255,0.06);border:1px solid rgba(77,223,255,0.15);border-radius:14px;padding:1.4rem;text-align:center;">
+            <div style="font-size:2.5rem;margin-bottom:0.6rem;" id="instant-icon">📱</div>
+            <div style="font-family:'Unbounded',sans-serif;font-size:0.8rem;font-weight:700;margin-bottom:0.4rem;" id="instant-title">Pay with Ozow</div>
+            <p style="font-size:0.78rem;opacity:0.5;" id="instant-desc">You'll be redirected to Ozow to complete your instant EFT payment securely.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="co-panel" id="co-panel-3">
+        <div class="co-section-title">Review Your Order</div>
+        <div id="review-delivery-card" class="review-card"></div>
+        <div id="review-payment-card" class="review-card"></div>
+        <div style="background:rgba(212,255,0,0.06);border:1px solid rgba(212,255,0,0.15);border-radius:14px;padding:1rem 1.2rem;font-size:0.78rem;opacity:0.8;line-height:1.6;">
+          🔒 Your payment is secured with 256-bit SSL encryption. By placing your order, you agree to Sim Wear's Terms & Conditions and Privacy Policy.
+        </div>
+      </div>
+
+      <div class="co-nav-bar" id="checkoutNavBar">
+        <button class="co-back-btn" id="co-back" onclick="checkoutBack()">✕ Cancel</button>
+        <button class="co-next-btn" id="co-next" onclick="checkoutNext()">Continue →</button>
+      </div>
+    </div>
+
+    <div class="co-right" id="checkoutSummary"></div>
+  </div>
+
+  <!-- CONFIRM SCREEN -->
+  <div class="co-confirm" id="co-confirm">
+    <div class="confirm-icon">🎉</div>
+    <div class="confirm-title">Order <span>Confirmed!</span></div>
+    <div class="confirm-order-num" id="confirmOrderNum">SW-000000</div>
+    <p class="confirm-sub">Your fire fits are on their way! You'll receive a confirmation email shortly with your tracking details.</p>
+    <div class="confirm-steps">
+      <div class="confirm-step"><div class="confirm-step-icon">✅</div>Order Placed</div>
+      <div class="confirm-step"><div class="confirm-step-icon">📦</div>Packing</div>
+      <div class="confirm-step"><div class="confirm-step-icon">🚚</div>On The Way</div>
+      <div class="confirm-step"><div class="confirm-step-icon">🏠</div>Delivered</div>
+    </div>
+    <a href="shop.html" class="btn-primary">Back to Shopping 🛍️</a>
+  </div>
+  </div>
+</main>
+
+<script src="shop.js"></script>
+<script>
+  let checkoutStep = 1;
+  let deliveryFee = 60;
+  let payMethod = 'card';
+
+  /* ============================================================
+     PAYFAST INTEGRATION (real SA payment gateway)
+     ------------------------------------------------------------
+     PAYFAST_SANDBOX = true uses PayFast's public SANDBOX test
+     credentials below, so checkout works end-to-end right now for
+     testing — no real money moves and no account is needed to try it.
+
+     TO GO LIVE:
+     1. Create a PayFast merchant account: https://www.payfast.co.za
+     2. Set PAYFAST_SANDBOX = false
+     3. Replace PAYFAST_MERCHANT_ID / PAYFAST_MERCHANT_KEY with your
+        own live values from your PayFast dashboard.
+     4. Set PAYFAST_NOTIFY_URL to a real server endpoint you control
+        (see note below — this is the one piece a static site can't do).
+
+     IMPORTANT LIMITATION: this is a static, backend-less site. PayFast's
+     "notify_url" (ITN) is meant to hit a server you control, which verifies
+     the payment and marks the order as paid — that's the secure way to
+     confirm payment happened before you ship anything. Without a backend,
+     this checkout instead trusts the "return_url" the browser is sent back
+     to, which works fine for getting started but can theoretically be
+     visited without paying. Before processing real orders at volume,
+     it's worth adding a small server (even a single serverless function)
+     to receive PayFast's ITN and confirm payment server-side.
+     ============================================================ */
+  const PAYFAST_SANDBOX = true;
+  const PAYFAST_MERCHANT_ID = '10000100';   // PayFast public sandbox test ID
+  const PAYFAST_MERCHANT_KEY = '46f0cd694581a'; // PayFast public sandbox test key
+  const PAYFAST_NOTIFY_URL = location.origin + location.pathname.replace('checkout.html','notify.html'); // placeholder — replace with a real server endpoint before going live
+
+  function payWithPayFast(orderNum, total, fname, lname, email) {
+    const action = PAYFAST_SANDBOX ? 'https://sandbox.payfast.co.za/eng/process' : 'https://www.payfast.co.za/eng/process';
+    const fields = {
+      merchant_id: PAYFAST_MERCHANT_ID,
+      merchant_key: PAYFAST_MERCHANT_KEY,
+      return_url: location.origin + location.pathname + '?paid=1&order=' + encodeURIComponent(orderNum),
+      cancel_url: location.origin + location.pathname + '?cancelled=1',
+      notify_url: PAYFAST_NOTIFY_URL,
+      name_first: fname || 'Sim Wear',
+      name_last: lname || 'Customer',
+      email_address: email || 'test@simwear.co.za',
+      m_payment_id: orderNum,
+      amount: total.toFixed(2),
+      item_name: 'Sim Wear Order ' + orderNum
+    };
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = action;
+    Object.entries(fields).forEach(([k, v]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden'; input.name = k; input.value = v;
+      form.appendChild(input);
+    });
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  // Handle returning from PayFast (or a cancelled payment)
+  (function handleGatewayReturn() {
+    const p = new URLSearchParams(location.search);
+    if (p.get('paid') === '1') {
+      document.querySelector('.co-layout').style.display = 'none';
+      document.getElementById('co-confirm').classList.add('active');
+      document.getElementById('confirmOrderNum').textContent = p.get('order') || 'SW-000000';
+      cart = [];
+      saveCart();
+      updateCounts();
+    } else if (p.get('cancelled') === '1') {
+      checkoutStep = 2;
+      setTimeout(() => { alert('Payment was cancelled — your bag is still saved, feel free to try again.'); }, 100);
+    }
+  })();
+
+  // If bag is empty, send back to cart
+  if (cart.length === 0 && !new URLSearchParams(location.search).get('paid')) location.href = 'cart.html';
+
+  function selectDelivery(el, fee) {
+    document.querySelectorAll('.delivery-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    deliveryFee = fee;
+    renderCheckoutSummary();
+  }
+
+  function selectPayMethod(el, method) {
+    document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+    el.classList.add('selected');
+    payMethod = method;
+    document.getElementById('card-fields').style.display = method === 'card' ? 'flex' : 'none';
+    document.getElementById('eft-fields').style.display = method === 'eft' ? 'flex' : 'none';
+    document.getElementById('instant-fields').style.display = (method === 'ozow' || method === 'payflex') ? 'flex' : 'none';
+    if (method === 'ozow') { document.getElementById('instant-icon').textContent='📱'; document.getElementById('instant-title').textContent='Pay with Ozow'; document.getElementById('instant-desc').textContent="You'll be redirected to Ozow to complete your instant EFT payment securely."; }
+    if (method === 'payflex') { document.getElementById('instant-icon').textContent='🔄'; document.getElementById('instant-title').textContent='Pay in 4 with PayFlex'; document.getElementById('instant-desc').textContent="Split your order into 4 interest-free payments. You'll be redirected to PayFlex to complete setup."; }
+    if (method === 'eft') { document.getElementById('eft-ref').textContent = 'SW-' + Math.floor(10000 + Math.random()*90000); }
+  }
+
+  function formatCard(input) { let v = input.value.replace(/\D/g,'').substring(0,16); input.value = v.replace(/(.{4})/g,'$1 ').trim(); }
+  function formatExpiry(input) { let v = input.value.replace(/\D/g,'').substring(0,4); if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2); input.value = v; }
+
+  function validateStep(step) {
+    if (step === 1) {
+      const required = ['f-fname','f-lname','f-email','f-phone','f-street','f-city','f-province','f-postal'];
+      let valid = true;
+      required.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) { el.classList.add('error'); valid = false; } else el.classList.remove('error');
+      });
+      if (!valid) return false;
+    }
+    if (step === 2 && payMethod === 'card') {
+      const cardFields = ['f-card-name','f-card-num','f-expiry','f-cvv'];
+      let valid = true;
+      cardFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) { el.classList.add('error'); valid = false; } else el.classList.remove('error');
+      });
+      if (!valid) return false;
+    }
+    return true;
+  }
+
+  function buildReviewCards() {
+    const fname = document.getElementById('f-fname').value, lname = document.getElementById('f-lname').value;
+    const email = document.getElementById('f-email').value;
+    const street = document.getElementById('f-street').value, city = document.getElementById('f-city').value;
+    const province = document.getElementById('f-province').value, postal = document.getElementById('f-postal').value;
+    const selectedDel = document.querySelector('.delivery-opt.selected .delivery-opt-name')?.textContent || 'Standard Delivery';
+
+    document.getElementById('review-delivery-card').innerHTML = `
+      <span class="review-edit" onclick="goToStep(1)">Edit</span>
+      <div style="font-family:'Unbounded',sans-serif;font-size:0.65rem;font-weight:700;text-transform:uppercase;opacity:0.4;letter-spacing:1.5px;">Delivery</div>
+      <div style="opacity:0.75;margin-top:0.6rem;">${fname} ${lname}<br>${email}<br>${street}, ${city}, ${province}, ${postal}<br><br>📦 ${selectedDel}</div>`;
+
+    const methodLabel = { card:'Credit / Debit Card', eft:'EFT Bank Transfer', ozow:'Ozow Instant EFT', payflex:'PayFlex — 4 Payments' };
+    const methodIcon = { card:'💳', eft:'🏦', ozow:'📱', payflex:'🔄' };
+    document.getElementById('review-payment-card').innerHTML = `
+      <span class="review-edit" onclick="goToStep(2)">Edit</span>
+      <div style="font-family:'Unbounded',sans-serif;font-size:0.65rem;font-weight:700;text-transform:uppercase;opacity:0.4;letter-spacing:1.5px;">Payment</div>
+      <div style="opacity:0.75;margin-top:0.6rem;">${methodIcon[payMethod]} ${methodLabel[payMethod]}${payMethod==='card' ? ' ···· '+document.getElementById('f-card-num').value.slice(-4) : ''}</div>`;
+  }
+
+  function checkoutNext() {
+    if (!validateStep(checkoutStep)) return;
+    if (checkoutStep === 3) { placeOrder(); return; }
+    if (checkoutStep === 2) buildReviewCards();
+    checkoutStep++;
+    updateCheckoutStepUI();
+  }
+  function checkoutBack() {
+    if (checkoutStep === 1) { location.href = 'cart.html'; return; }
+    checkoutStep--;
+    updateCheckoutStepUI();
+  }
+  function goToStep(n) { checkoutStep = n; updateCheckoutStepUI(); }
+
+  function updateCheckoutStepUI() {
+    document.querySelectorAll('.co-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`co-panel-${checkoutStep}`)?.classList.add('active');
+    for (let i = 1; i <= 3; i++) {
+      const tab = document.getElementById(`step-tab-${i}`);
+      tab.classList.remove('active','done');
+      if (i < checkoutStep) tab.classList.add('done');
+      else if (i === checkoutStep) tab.classList.add('active');
+    }
+    document.getElementById('co-back').textContent = checkoutStep === 1 ? '✕ Cancel' : '← Back';
+    const nextBtn = document.getElementById('co-next');
+    nextBtn.textContent = checkoutStep === 3 ? '🛍️ Place Order' : 'Continue →';
+    nextBtn.style.background = checkoutStep === 3 ? 'var(--coral)' : '';
+    renderCheckoutSummary();
+    window.scrollTo(0,0);
+  }
+
+  function renderCheckoutSummary() {
+    const subtotal = cartSubtotal();
+    const isFreeDelivery = subtotal >= 600;
+    const actualDelivery = isFreeDelivery ? 0 : deliveryFee;
+    const total = subtotal + actualDelivery;
+
+    document.getElementById('checkoutSummary').innerHTML = `
+      <div class="summary-panel" style="position:static;">
+        <h3>Order Summary</h3>
+        ${cart.map(item => `
+          <div style="display:flex;gap:0.8rem;align-items:center;margin-bottom:0.9rem;">
+            <div class="cart-item-img ${item.bg}" style="position:relative;">
+              <span class="product-img-fallback">${item.emoji}</span>
+              ${item.img ? `<img src="${item.img}" alt="${item.name}" onerror="this.remove()" />` : ''}
+              <span style="position:absolute;top:-6px;right:-6px;background:var(--coral);color:#fff;font-size:0.6rem;font-weight:900;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:2;">${item.qty}</span>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-family:'Unbounded',sans-serif;font-size:0.72rem;font-weight:700;">${item.name}</div>
+              <div style="font-size:0.68rem;opacity:0.4;">${item.type}</div>
+            </div>
+            <div style="font-family:'Unbounded',sans-serif;font-size:0.78rem;font-weight:700;">${zar(item.price * item.qty)}</div>
+          </div>`).join('')}
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:1rem 0;" />
+        <div class="summary-line"><span>Subtotal</span><span>${zar(subtotal)}</span></div>
+        <div class="summary-line"><span>Delivery</span><span style="color:${actualDelivery===0?'var(--lime)':'inherit'}">${actualDelivery === 0 ? 'FREE' : zar(actualDelivery)}</span></div>
+        <div class="summary-line total"><span>Total</span><span>${zar(total)}</span></div>
+        ${isFreeDelivery ? `<p style="font-size:0.75rem;color:var(--lime);margin-top:0.8rem;">🎉 You qualify for free delivery!</p>` : `<p style="font-size:0.75rem;opacity:0.4;margin-top:0.8rem;">Spend ${zar(600-subtotal)} more for free delivery</p>`}
+      </div>`;
+  }
+
+  function placeOrder() {
+    const orderNum = 'SW-' + Math.floor(100000 + Math.random() * 900000);
+    const total = cartSubtotal() + (cartSubtotal() >= 600 ? 0 : deliveryFee);
+    const fname = document.getElementById('f-fname').value;
+    const lname = document.getElementById('f-lname').value;
+    const email = document.getElementById('f-email').value;
+
+    if (payMethod === 'payflex') {
+      // Honest limitation: PayFlex needs its own separate merchant integration,
+      // not something a static redirect can wire up. Don't fake it — tell the user.
+      alert("PayFlex checkout isn't connected yet — it needs its own merchant account and integration, separate from PayFast. Please choose Card, EFT or Ozow for now, or contact us to arrange PayFlex manually.");
+      return;
+    }
+
+    if (payMethod === 'card' || payMethod === 'ozow') {
+      // Real gateway hand-off: redirects to PayFast's secure hosted payment page
+      const btn = document.getElementById('co-next');
+      btn.textContent = '⏳ Redirecting to secure payment...';
+      btn.disabled = true;
+      payWithPayFast(orderNum, total, fname, lname, email);
+      return; // browser is navigating away — nothing more to do here
+    }
+
+    // EFT: no gateway involved, it's a manual bank transfer — order is placed as pending
+    const btn = document.getElementById('co-next');
+    btn.textContent = '⏳ Processing...';
+    btn.disabled = true;
+    setTimeout(() => {
+      document.querySelector('.co-layout').style.display = 'none';
+      document.getElementById('co-confirm').classList.add('active');
+      document.getElementById('confirmOrderNum').textContent = orderNum;
+      document.querySelector('.confirm-sub').textContent = "We've reserved your order — please complete the EFT using the reference shown earlier. Your items will ship once payment reflects (1–2 business days).";
+      cart = [];
+      saveCart();
+      updateCounts();
+    }, 1000);
+  }
+
+  renderCheckoutSummary();
+</script>
+</body>
+</html>
