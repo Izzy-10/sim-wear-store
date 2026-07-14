@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="theme-color" content="#0E0E0E" />
+<title>Size Guide — Sim Wear</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .sg-tabs { display: flex; gap: 0.6rem; flex-wrap: wrap; padding: 0 3rem; margin-bottom: 2rem; }
+  .sg-tab { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.12); color: var(--off-white); font-family: 'Unbounded', sans-serif; font-size: 0.72rem; font-weight: 700; padding: 0.65rem 1.3rem; border-radius: 100px; cursor: pointer; transition: background 0.2s, color 0.2s; }
+  .sg-tab.active { background: var(--lime); border-color: var(--lime); color: var(--dark); }
+  .sg-panel { display: none; padding: 0 3rem 4rem; }
+  .sg-panel.active { display: block; }
+  .sg-table-wrap { overflow-x: auto; background: var(--card-bg); border-radius: 18px; padding: 0.5rem; }
+  table.sg-table { width: 100%; border-collapse: collapse; min-width: 480px; }
+  table.sg-table th, table.sg-table td { padding: 0.9rem 1.2rem; text-align: left; font-size: 0.85rem; }
+  table.sg-table th { font-family: 'Unbounded', sans-serif; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.45; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  table.sg-table td { border-bottom: 1px solid rgba(255,255,255,0.05); opacity: 0.85; }
+  table.sg-table tr:last-child td { border-bottom: none; }
+  .sg-tip { background: rgba(212,255,0,0.06); border: 1px solid rgba(212,255,0,0.15); border-radius: 14px; padding: 1.2rem 1.4rem; margin-top: 1.5rem; font-size: 0.85rem; opacity: 0.85; line-height: 1.6; }
+  .sg-howto { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+  .sg-howto-card { flex: 1; min-width: 220px; background: var(--card-bg); border-radius: 16px; padding: 1.4rem; }
+  .sg-howto-card .icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+  .sg-howto-card h4 { font-family: 'Unbounded', sans-serif; font-size: 0.8rem; margin-bottom: 0.4rem; }
+  .sg-howto-card p { font-size: 0.8rem; opacity: 0.5; line-height: 1.6; }
+  @media (max-width: 768px) { .sg-tabs, .sg-panel { padding-left: 1.2rem; padding-right: 1.2rem; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-logo-text">SIM<span class="accent">WEAR</span></span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="shop.html">New In</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="openCart()">🛍️ Bag <span class="cart-count" id="cartCount">0</span></button>
+    <a href="shop.html" class="nav-cta">Shop Now →</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html">Shop</a><a href="shop.html">New In</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  <div class="mobile-menu-footer">Sim Wear · Dress Different</div>
+</div>
+
+<div class="bottom-nav">
+  <a href="index.html" class="bottom-nav-item"><span class="bn-icon">🏠</span>Home</a>
+  <a href="shop.html" class="bottom-nav-item"><span class="bn-icon">🛍️</span>Shop</a>
+  <a href="contact.html" class="bottom-nav-item"><span class="bn-icon">💬</span>Contact</a>
+  <button class="bottom-nav-item" onclick="openCart()" style="border:none;background:none;">
+    <span class="bottom-cart-badge"><span class="bn-icon">🛒</span><span class="badge-dot" id="bottomCartBadge">0</span></span>Bag
+  </button>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>Your Bag 🛍️</h2>
+    <div class="cart-header-right"><span class="cart-item-total" id="drawerItemCount">0 items</span><button class="close-btn" onclick="closeCart()">✕</button></div>
+  </div>
+  <div class="cart-items" id="cartItemsContainer"></div>
+  <div class="cart-footer">
+    <div class="cart-subtotal"><span>Subtotal</span><span class="total-amount" id="cartTotal">R 0</span></div>
+    <p class="cart-shipping-note">🚚 Free delivery on orders over R600</p>
+    <a href="checkout.html" class="checkout-btn" id="checkoutBtn">Proceed to Checkout →</a>
+    <button class="continue-btn" onclick="closeCart()">← Continue Shopping</button>
+  </div>
+</div>
+
+<main>
+  <div class="page-hero" style="padding-bottom:1.5rem;">
+    <div class="section-label">Find Your Fit</div>
+    <h1>Size Guide</h1>
+    <p>Not sure which size to grab? Use the charts below — measurements are in centimetres unless noted.</p>
+  </div>
+
+  <div class="sg-tabs" id="sgTabs"></div>
+
+  <div class="sg-panel active" id="sg-tees">
+    <div class="sg-table-wrap">
+      <table class="sg-table">
+        <thead><tr><th>Size</th><th>Chest (cm)</th><th>Length (cm)</th><th>Fits Like</th></tr></thead>
+        <tbody>
+          <tr><td>XS</td><td>80–88</td><td>66</td><td>UK 6–8</td></tr>
+          <tr><td>S</td><td>88–96</td><td>69</td><td>UK 8–10</td></tr>
+          <tr><td>M</td><td>96–104</td><td>72</td><td>UK 10–12</td></tr>
+          <tr><td>L</td><td>104–112</td><td>75</td><td>UK 12–14</td></tr>
+          <tr><td>XL</td><td>112–120</td><td>78</td><td>UK 14–16</td></tr>
+          <tr><td>XXL</td><td>120–130</td><td>81</td><td>UK 16–18</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sg-tip">💡 Sim Wear tees and hoodies are cut oversized by design. If you prefer a snugger, true-to-size fit, size down. For the classic relaxed Sim Wear look, stick to your usual size.</div>
+  </div>
+
+  <div class="sg-panel" id="sg-sneakers">
+    <div class="sg-table-wrap">
+      <table class="sg-table">
+        <thead><tr><th>UK</th><th>EU</th><th>US (Men's)</th><th>Foot Length (cm)</th></tr></thead>
+        <tbody>
+          <tr><td>UK 6</td><td>EU 39</td><td>US 7</td><td>24.5</td></tr>
+          <tr><td>UK 7</td><td>EU 40</td><td>US 8</td><td>25.5</td></tr>
+          <tr><td>UK 8</td><td>EU 42</td><td>US 9</td><td>26.5</td></tr>
+          <tr><td>UK 9</td><td>EU 43</td><td>US 10</td><td>27.5</td></tr>
+          <tr><td>UK 10</td><td>EU 44</td><td>US 11</td><td>28.5</td></tr>
+          <tr><td>UK 11</td><td>EU 45</td><td>US 12</td><td>29.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sg-tip">💡 Measure your foot length in the afternoon (feet swell slightly during the day) and match it to the closest size above. Between sizes? Go up half a size for comfort.</div>
+  </div>
+
+  <div class="sg-panel" id="sg-outfits">
+    <div class="sg-table-wrap">
+      <table class="sg-table">
+        <thead><tr><th>Size</th><th>Chest / Bust (cm)</th><th>Waist (cm)</th></tr></thead>
+        <tbody>
+          <tr><td>XS</td><td>80–88</td><td>64–72</td></tr>
+          <tr><td>S</td><td>88–96</td><td>72–80</td></tr>
+          <tr><td>M</td><td>96–104</td><td>80–88</td></tr>
+          <tr><td>L</td><td>104–112</td><td>88–96</td></tr>
+          <tr><td>XL</td><td>112–120</td><td>96–104</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sg-tip">💡 Full outfit sets fit true to size based on the top piece. If your chest and waist measurements fall into different rows, we recommend sizing up for the bottoms.</div>
+  </div>
+
+  <div class="sg-panel" id="sg-accessories">
+    <div class="sg-table-wrap">
+      <table class="sg-table">
+        <thead><tr><th>Item</th><th>Fit Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Caps</td><td>One size, adjustable strap — fits most head sizes (54–60cm)</td></tr>
+          <tr><td>Chains & Rings</td><td>Chain: 50cm length, fits most necks. Ring: one size, resizable band</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sg-tip">💡 Most Sim Wear accessories are designed to be one-size and adjustable. Check individual product pages for specific measurements.</div>
+  </div>
+
+  <div style="padding: 0 3rem 4rem;">
+    <div class="section-label">How To Measure</div>
+    <h2 class="section-title" style="margin-bottom:0.5rem;">Getting An Accurate Fit</h2>
+    <div class="sg-howto">
+      <div class="sg-howto-card"><div class="icon">📏</div><h4>Chest</h4><p>Measure around the fullest part of your chest, keeping the tape level under your arms.</p></div>
+      <div class="sg-howto-card"><div class="icon">📐</div><h4>Waist</h4><p>Measure around your natural waistline, just above your belly button.</p></div>
+      <div class="sg-howto-card"><div class="icon">👣</div><h4>Foot Length</h4><p>Stand on a piece of paper, trace your foot, and measure heel to longest toe.</p></div>
+    </div>
+    <p style="opacity:0.5;font-size:0.85rem;margin-top:1.5rem;">Still unsure? <a href="contact.html" style="color:var(--lime);text-decoration:none;">Reach out to us</a> with your measurements and we'll recommend a size.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-bottom" style="border-top:none;">
+    <span>© 2026 Sim Wear. Built by Sizwe Sibiya.</span>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/mudes2026" target="_blank" title="Instagram">📸</a>
+      <a href="https://www.tiktok.com/@sizwesibiya7" target="_blank" title="TikTok">🎵</a>
+      <a href="https://wa.me/qr/FZLHEACFAODGC1" target="_blank" title="WhatsApp">💬</a>
+    </div>
+  </div>
+</footer>
+
+<script src="shop.js"></script>
+<script>
+  const sgTabs = [
+    { key: 'tees', name: '👕 Tees & Hoodies' },
+    { key: 'sneakers', name: '👟 Sneakers' },
+    { key: 'outfits', name: '🔥 Full Outfits' },
+    { key: 'accessories', name: '💎 Accessories' }
+  ];
+  document.getElementById('sgTabs').innerHTML = sgTabs.map((t,i) => `<button class="sg-tab ${i===0?'active':''}" onclick="showSgPanel('${t.key}', this)">${t.name}</button>`).join('');
+
+  function showSgPanel(key, btn) {
+    document.querySelectorAll('.sg-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.sg-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sg-' + key).classList.add('active');
+  }
+
+  // Allow deep-linking, e.g. sizeguide.html?type=sneakers
+  const sgType = new URLSearchParams(location.search).get('type');
+  if (sgType && document.getElementById('sg-' + sgType)) {
+    const idx = sgTabs.findIndex(t => t.key === sgType);
+    if (idx > -1) showSgPanel(sgType, document.querySelectorAll('.sg-tab')[idx]);
+  }
+</script>
+</body>
+</html>
+
