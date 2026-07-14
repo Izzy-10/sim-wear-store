@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="theme-color" content="#0E0E0E" />
+<title>Shop — Sim Wear</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .filter-row { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .filter-chip {
+    background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.12);
+    color: var(--off-white); font-family: 'Unbounded', sans-serif; font-size: 0.72rem; font-weight: 700;
+    padding: 0.6rem 1.2rem; border-radius: 100px; cursor: pointer; transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .filter-chip:hover { border-color: var(--lime); }
+  .filter-chip.active { background: var(--lime); border-color: var(--lime); color: var(--dark); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-logo-text">SIM<span class="accent">WEAR</span></span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html" class="active">Shop</a></li>
+    <li><a href="shop.html">New In</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="openCart()">🛍️ Bag <span class="cart-count" id="cartCount">0</span></button>
+    <a href="cart.html" class="nav-cta">View Bag →</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html">Shop</a>
+  <a href="shop.html">New In</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="mobile-menu-footer">Sim Wear · Dress Different</div>
+</div>
+
+<div class="bottom-nav">
+  <a href="index.html" class="bottom-nav-item"><span class="bn-icon">🏠</span>Home</a>
+  <a href="shop.html" class="bottom-nav-item active"><span class="bn-icon">🛍️</span>Shop</a>
+  <a href="contact.html" class="bottom-nav-item"><span class="bn-icon">💬</span>Contact</a>
+  <button class="bottom-nav-item" onclick="openCart()" style="border:none;background:none;">
+    <span class="bottom-cart-badge"><span class="bn-icon">🛒</span><span class="badge-dot" id="bottomCartBadge">0</span></span>Bag
+  </button>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>Your Bag 🛍️</h2>
+    <div class="cart-header-right">
+      <span class="cart-item-total" id="drawerItemCount">0 items</span>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+  </div>
+  <div class="cart-items" id="cartItemsContainer"></div>
+  <div class="cart-footer">
+    <div class="cart-subtotal"><span>Subtotal</span><span class="total-amount" id="cartTotal">R 0</span></div>
+    <p class="cart-shipping-note">🚚 Free delivery on orders over R600</p>
+    <a href="checkout.html" class="checkout-btn" id="checkoutBtn">Proceed to Checkout →</a>
+    <button class="continue-btn" onclick="closeCart()">← Continue Shopping</button>
+  </div>
+</div>
+
+<main>
+  <div class="page-hero">
+    <div class="section-label">The Full Range</div>
+    <h1>Shop All Products</h1>
+    <p>Every drop, all in one place. Filter by category to find your fit.</p>
+  </div>
+
+  <section style="padding-top:0;">
+    <div class="filter-row" id="filterRow"></div>
+    <div class="products-grid" id="shopGrid"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="nav-logo-text">SIM<span class="accent">WEAR</span></span>
+      <p>South African streetwear built different. Founded by Sizwe Sibiya, based in Durban, shipped nationwide.</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col"><h4>Shop</h4><ul>
+        <li><a href="shop.html?cat=tees">Tees & Hoodies</a></li>
+        <li><a href="shop.html?cat=sneakers">Sneakers</a></li>
+        <li><a href="shop.html?cat=accessories">Accessories</a></li>
+        <li><a href="shop.html?cat=outfits">Full Outfit Sets</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Help</h4><ul>
+        <li><a href="sizeguide.html">Size Guide</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="cart.html">Your Bag</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Company</h4><ul>
+        <li><a href="about.html">About Sim Wear</a></li>
+        <li><a href="contact.html">Get In Touch</a></li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Sim Wear. Built by Sizwe Sibiya.</span>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/mudes2026" target="_blank" title="Instagram">📸</a>
+      <a href="https://www.tiktok.com/@sizwesibiya7" target="_blank" title="TikTok">🎵</a>
+      <a href="https://www.facebook.com/sizwe.sbiya.5439" target="_blank" title="Facebook">👥</a>
+      <a href="https://wa.me/qr/FZLHEACFAODGC1" target="_blank" title="WhatsApp">💬</a>
+    </div>
+  </div>
+</footer>
+
+<script src="shop.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  let activeFilter = params.get('cat') || 'all';
+
+  function renderFilters() {
+    const all = [{ key: 'all', name: 'All' }, ...CATEGORIES];
+    document.getElementById('filterRow').innerHTML = all.map(c => `
+      <button class="filter-chip ${activeFilter === c.key ? 'active' : ''}" onclick="setFilter('${c.key}')">${c.emoji || ''} ${c.name}</button>
+    `).join('');
+  }
+
+  function renderShopGrid() {
+    const list = activeFilter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === activeFilter);
+    const grid = document.getElementById('shopGrid');
+    if (list.length === 0) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="icon">🔍</div><h3>No products found</h3><p>Try a different category.</p></div>`;
+      return;
+    }
+    renderProductCards(grid, list);
+  }
+
+  function setFilter(key) {
+    activeFilter = key;
+    const url = new URL(location);
+    if (key === 'all') url.searchParams.delete('cat'); else url.searchParams.set('cat', key);
+    history.replaceState(null, '', url);
+    renderFilters();
+    renderShopGrid();
+  }
+
+  renderFilters();
+  renderShopGrid();
+</script>
+</body>
+</html>
+
